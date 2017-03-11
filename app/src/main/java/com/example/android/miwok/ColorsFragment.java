@@ -1,19 +1,25 @@
 package com.example.android.miwok;
 
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
-public class ColorsActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ColorsFragment extends Fragment {
+
 
     private MediaPlayer mMediaPlayer;
     private AudioManager am;
@@ -39,14 +45,18 @@ public class ColorsActivity extends AppCompatActivity {
             }
         }
     };
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
 
-        am = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+    public ColorsFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
+
+        am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         final ArrayList<Word> words = new ArrayList<Word>();
         words.add(new Word("red ", "weṭeṭṭi", R.drawable.color_red, R.raw.color_red));
@@ -58,9 +68,9 @@ public class ColorsActivity extends AppCompatActivity {
         words.add(new Word("dusty yellow", "ṭopiisә", R.drawable.color_dusty_yellow, R.raw.color_dusty_yellow));
         words.add(new Word("mustard yellow", "chiwiiṭә", R.drawable.color_mustard_yellow, R.raw.color_mustard_yellow));
 
-        WordAdapter adapter = new WordAdapter(this, words, R.color.category_colors);
+        WordAdapter adapter = new WordAdapter(getActivity(), words, R.color.category_colors);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
 
         listView.setAdapter(adapter);
 
@@ -74,7 +84,7 @@ public class ColorsActivity extends AppCompatActivity {
 
                 int result = am.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mMediaPlayer = MediaPlayer.create(ColorsActivity.this, word.getAudioID());
+                    mMediaPlayer = MediaPlayer.create(getActivity(), word.getAudioID());
 
                     mMediaPlayer.start();
 
@@ -87,6 +97,8 @@ public class ColorsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        return rootView;
     }
 
     private void releaseMediaPlayer() {
@@ -103,11 +115,9 @@ public class ColorsActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         releaseMediaPlayer();
     }
-
 }

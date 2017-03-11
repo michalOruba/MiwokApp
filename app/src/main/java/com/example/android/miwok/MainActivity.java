@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2016 The Android Open Source Project
  *
@@ -15,70 +16,43 @@
  */
 package com.example.android.miwok;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
+import com.example.android.miwok.R;
+
+import static android.support.v7.widget.AppCompatDrawableManager.get;
+//import static com.example.android.miwok.R.id.toolbar;
+
+/**
+ * Displays a {@link ViewPager} where each page shows a different day of the week.
+ */
 public class MainActivity extends AppCompatActivity {
-    private static Context context;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set the content of the activity to use the activity_main.xml layout file
-        setContentView(R.layout.activity_main);
-        MainActivity.context = getApplicationContext();
 
-        // Find the View that shows the numbers category
-        TextView numbers = (TextView) findViewById(R.id.numbers);
-        TextView phrases = (TextView) findViewById(R.id.phrases);
-        TextView family = (TextView) findViewById(R.id.family);
-        TextView colors = (TextView) findViewById(R.id.colors);
+        setContentView(R.layout.activity_category);
 
-        // Set a click listener on that View
-        numbers.setOnClickListener(new View.OnClickListener() {
-            // The code in this method will be executed when the numbers View is clicked on.
-            @Override
-            public void onClick(View view) {
-                Intent numbersIntent = new Intent(MainActivity.this, NumbersActivity.class);
-                startActivity(numbersIntent);
-            }
-        });
+        // Find the view pager that will allow the user to swipe between fragments
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        phrases.setOnClickListener(new View.OnClickListener()   {
-            //The code in this method will be executed when the phrases View is clocked on.
-            @Override
-            public void onClick (View view){
-                Intent phrasesIntent = new Intent(MainActivity.this, PhrasesActivity.class);
-                startActivity(phrasesIntent);
-            }
-        });
+        // Create an adapter that knows which fragment should be shown on each page
+        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager());
 
-        family.setOnClickListener(new View.OnClickListener()   {
-            //The code in this method will be executed when the family View is clocked on.
-            @Override
-            public void onClick (View view){
-                Intent familyIntent = new Intent(MainActivity.this, FamilyActivity.class);
-                startActivity(familyIntent);
-            }
-        });
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter);
 
-        colors.setOnClickListener(new View.OnClickListener()   {
-            //The code in this method will be executed when the colors View is clocked on.
-            @Override
-            public void onClick (View view){
-                Intent colorsIntent = new Intent(MainActivity.this, ColorsActivity.class);
-                startActivity(colorsIntent);
-            }
-        });
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
-
-    public static Context getAppContext() {
-        return MainActivity.context;
-    }
-
-
 }
